@@ -3,140 +3,513 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mawqena AI - مساعد الذكاء الاصطناعي</title>
+    <title>Mawqena Platform - المنصة المتكاملة</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #050505; color: #fff; text-align: right; padding-bottom: 30px; }
-        .container { max-width: 650px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; height: 100vh; max-height: 90vh; }
+        body { background-color: #030303; color: #fff; text-align: right; padding-bottom: 50px; }
+        .container { max-width: 650px; margin: 0 auto; padding: 20px; }
         
-        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 15px; margin-bottom: 15px; }
-        .logo-area h1 { font-size: 20px; font-weight: bold; color: #fff; }
-        .logo-area h1 span { color: #a855f7; }
-        .logo-area p { font-size: 10px; color: #888; text-transform: uppercase; margin-top: 2px; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 15px; margin-bottom: 20px; }
+        .logo-area h1 { font-size: 20px; font-weight: bold; color: #fff; cursor: pointer; }
+        .logo-area h1 span { color: #38bdf8; }
+        .logo-area p { font-size: 10px; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
 
-        .nav-links { display: flex; gap: 8px; }
-        .nav-link { padding: 6px 12px; background: #111; border: 1px solid #333; color: #ccc; border-radius: 8px; text-decoration: none; font-size: 12px; }
-        .nav-link:hover { background: #222; color: #fff; }
+        .nav-tabs { display: flex; gap: 6px; background: #0b0b0b; border: 1px solid #222; padding: 6px; border-radius: 10px; margin-bottom: 20px; overflow-x: auto; }
+        .tab-btn { flex: 1; padding: 8px 12px; background: transparent; border: none; color: #888; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; text-align: center; white-space: nowrap; transition: 0.2s; }
+        .tab-btn.active { background: #1a1a1a; color: #38bdf8; }
+        .tab-btn:hover { color: #fff; }
 
-        .chat-container { flex: 1; background: #000; border: 1px solid #222; border-radius: 12px; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; }
+        .section { display: none; }
+        .section.active { display: block; }
+
+        .box { background: #000; border: 1px solid #222; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+        h2 { font-size: 17px; color: #fff; margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 8px; }
+        p, label { font-size: 14px; color: #888; }
         
-        .message { padding: 12px 16px; border-radius: 10px; font-size: 14px; max-width: 85%; line-height: 1.5; word-wrap: break-word; }
+        input, textarea, select { width: 100%; padding: 12px; background: #0b0b0b; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 14px; margin-bottom: 12px; outline: none; }
+        input:focus, textarea:focus, select:focus { border-color: #38bdf8; }
+
+        button { width: 100%; padding: 12px; border: 1px solid #444; border-radius: 8px; font-size: 14px; cursor: pointer; background: #000; color: #fff; font-weight: bold; transition: 0.2s; }
+        button:hover { border-color: #38bdf8; color: #38bdf8; }
+
+        .service-card { display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; background: #080808; padding: 15px; border-radius: 10px; margin-bottom: 10px; }
+        .service-info b { display: block; font-size: 15px; color: #fff; margin-bottom: 4px; }
+        .service-info span { font-size: 13px; color: #aaa; }
+        .service-card button { width: auto; padding: 8px 14px; font-size: 13px; background: #111; }
+
+        .chat-container { background: #000; border: 1px solid #222; border-radius: 12px; padding: 15px; height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; }
+        .message { padding: 12px 16px; border-radius: 10px; font-size: 14px; max-width: 85%; line-height: 1.5; word-wrap: break-word; white-space: pre-wrap; }
         .message.ai { background: #111; border: 1px solid #333; color: #e2e8f0; align-self: flex-start; }
         .message.user { background: #a855f7; color: #fff; align-self: flex-end; }
         .message.ai span { color: #a855f7; font-weight: bold; display: block; margin-bottom: 4px; font-size: 12px; }
 
-        .input-box { display: flex; gap: 8px; }
-        input { flex: 1; padding: 12px; background: #0b0b0b; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 14px; outline: none; }
-        input:focus { border-color: #a855f7; }
+        .profile-card { background: #0b0b0b; border: 1px solid #222; border-radius: 16px; padding: 25px; text-align: center; }
+        .avatar { width: 80px; height: 80px; background: linear-gradient(135deg, #38bdf8, #a855f7); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; color: #fff; }
         
-        button { padding: 0 20px; background: #a855f7; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px; }
-        button:hover { background: #9333ea; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .stat-card { background: #0b0b0b; border: 1px solid #222; padding: 12px; border-radius: 8px; text-align: center; font-size: 12px; color: #888; }
+        .stat-card span { display: block; font-size: 16px; font-weight: bold; color: #38bdf8; margin-top: 4px; }
 
-        .suggestions { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 10px; }
-        .suggestion-chip { background: #111; border: 1px solid #333; color: #aaa; padding: 6px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; white-space: nowrap; }
-        .suggestion-chip:hover { border-color: #a855f7; color: #fff; }
+        .secret-access { margin-top: 30px; text-align: center; border-top: 1px dashed #222; padding-top: 15px; }
+        .secret-btn { background: transparent; border: none; color: #444; font-size: 11px; cursor: pointer; }
+        .secret-btn:hover { color: #888; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <header>
-            <div class="logo-area">
-                <h1>Mawqena <span>AI Studio</span></h1>
-                <p>Smart Assistant & Code Generator</p>
+            <div class="logo-area" onclick="triggerSecret()">
+                <h1>Mawqena <span>Platform</span></h1>
+                <p>By عيسى</p>
             </div>
-            <div class="nav-links">
-                <a href="index.html" class="nav-link" target="_blank">🌐 المتجر</a>
-                <a href="admin.html" class="nav-link" target="_blank">⚙️ الإدارة</a>
-            </div>
+            <div id="adminBadge" style="display:none; background: #fbbf24; color: #000; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold;">وضع الإدارة مفعل ⚡</div>
         </header>
 
-        <div class="chat-container" id="chatContainer">
-            <div class="message ai">
-                <span>🤖 مساعد عيسى الذكي</span>
-                أهلاً بك يا عيسى! أنا مساعدك الذكي المربوط بمتجرك. أستطيع مساعدتك في توليد أفكار للخدمات، كتابة أكواد برمجية، أو إضافة خدمات جديدة فوراً للمتجر بناءً على طلبك. كيف أساعدك اليوم؟
+        <!-- الأزرار الرئيسية للزوار -->
+        <div class="nav-tabs" id="publicNav">
+            <button class="tab-btn active" onclick="switchTab('home')" id="btn-home">🏠 المتجر</button>
+            <button class="tab-btn" onclick="switchTab('search')" id="btn-search">🔍 بحث</button>
+            <button class="tab-btn" onclick="switchTab('cart')" id="btn-cart">🛒 السلة</button>
+            <button class="tab-btn" onclick="switchTab('track')" id="btn-track">📦 تتبع الطلب</button>
+            <button class="tab-btn" onclick="switchTab('profile')" id="btn-profile">👤 المطور</button>
+        </div>
+
+        <!-- أزرار الإدارة والـ AI (للمطور حصرياً) -->
+        <div class="nav-tabs" id="adminNav" style="display: none; border-color: #fbbf24;">
+            <button class="tab-btn active" onclick="switchTab('home')" id="btn-home2">🏠 المتجر</button>
+            <button class="tab-btn" onclick="switchTab('admin')" id="btn-admin" style="color:#fbbf24">⚙️ الإدارة</button>
+            <button class="tab-btn" onclick="switchTab('ai')" id="btn-ai" style="color:#a855f7">🤖 الذكاء الاصطناعي</button>
+            <button class="tab-btn" onclick="switchTab('profile')" id="btn-profile2">👤 المطور</button>
+        </div>
+
+        <!-- 1. المتجر -->
+        <div id="sec-home" class="section active">
+            <div class="box">
+                <h2 style="border:none; margin:0 0 5px 0;">أكبر سوق للخدمات الرقمية</h2>
+                <p>حلول رقمية وبرمجية متكاملة لإنجاز أعمالك بأعلى جودة.</p>
+            </div>
+            <h2>الخدمات المتاحة</h2>
+            <div id="servicesList"></div>
+        </div>
+
+        <!-- 2. بحث -->
+        <div id="sec-search" class="section">
+            <h2>بحث عن خدمة</h2>
+            <input type="text" id="searchInput" placeholder="ابحث عن خدمة..." oninput="handleSearch()">
+            <div id="searchResults"></div>
+        </div>
+
+        <!-- 3. السلة -->
+        <div id="sec-cart" class="section">
+            <h2>سلة المشتريات</h2>
+            <div class="box" id="cartContent" style="text-align: center; color: #888;">
+                لا يوجد منتجات في سلة المشتريات الخاصة بك
+            </div>
+            <div id="checkoutBox" style="display: none;">
+                <input type="text" id="clientContact" placeholder="معرف دسكورد أو البريد للتواصل...">
+                <textarea id="orderNote" rows="3" placeholder="ملاحظات إضافية على الطلب..."></textarea>
+                <button onclick="submitOrder()" style="background: #fff; color: #000; border-color: #fff;">إتمام الطلب وإرساله</button>
             </div>
         </div>
 
-        <div class="suggestions">
-            <div class="suggestion-chip" onclick="sendPreset('اقترح خدمة برمجية جديدة للمتجر')">💡 اقترح خدمة برمجية</div>
-            <div class="suggestion-chip" onclick="sendPreset('أعطني كود زر منسق بـ CSS')">💻 كود CSS جاهز</div>
-            <div class="suggestion-chip" onclick="sendPreset('أضف خدمة تصميم شعارات بسعر 10$ للمتجر')">⚡ إضافة خدمة شعارات</div>
-            <div class="suggestion-chip" onclick="sendPreset('أضف خدمة تهيئة سيرفر دسكورد بسعر 7$ للمتجر')">🚀 إضافة خدمة دسكورد</div>
+        <!-- 4. تتبع الطلب -->
+        <div id="sec-track" class="section">
+            <h2>تتبع حالة طلبك</h2>
+            <input type="text" id="trackInput" placeholder="أدخل رقم الطلب (مثلاً: #MQ-102)...">
+            <button onclick="trackOrder()">بحث عن حالة الطلب</button>
+            <div id="trackResult"></div>
         </div>
 
-        <div class="input-box">
-            <input type="text" id="userInput" placeholder="اطلب شيئاً من الذكاء الاصطناعي..." onkeypress="handleKeyPress(event)">
-            <button onclick="sendMessage()">إرسال</button>
+        <!-- 5. لوحة الإدارة -->
+        <div id="sec-admin" class="section">
+            <div class="box">
+                <h2>📊 إحصائيات النظام العامة</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">الزوار<span id="statVisitors">0</span></div>
+                    <div class="stat-card">الطلبات<span id="statOrders">0</span></div>
+                    <div class="stat-card">الخدمات<span id="statServices">0</span></div>
+                </div>
+            </div>
+
+            <div class="box" style="border-color: #38bdf8;">
+                <h2 style="color: #38bdf8; border-color: #002233;">📦 إدارة طلبات العملاء</h2>
+                <div id="adminOrdersList"></div>
+            </div>
+
+            <div class="box" style="border-color: #fbbf24;">
+                <h2 style="color: #fbbf24; border-color: #332200;">⚡ إضافة خدمة جديدة</h2>
+                <input type="text" id="newServiceName" placeholder="اسم الخدمة...">
+                <input type="text" id="newServicePrice" placeholder="السعر (مثلاً: 15$)...">
+                <button onclick="addNewService()">نشر الخدمة فوراً</button>
+            </div>
+
+            <div class="box">
+                <h2>🛠️ الخدمات الحالية</h2>
+                <div id="currentServicesList"></div>
+            </div>
+        </div>
+
+        <!-- 6. الذكاء الاصطناعي الحقيقي -->
+        <div id="sec-ai" class="section">
+            <div class="box" style="padding: 12px; margin-bottom: 12px;">
+                <input type="password" id="geminiApiKey" placeholder="أدخل مفتاح Google Gemini API Key الخاص بك هنا..." style="margin-bottom: 0; font-size: 12px;" onchange="saveApiKey()">
+            </div>
+            
+            <div class="chat-container" id="chatContainer">
+                <div class="message ai">
+                    <span>🤖 مساعد عيسى الذكي (Gemini)</span>
+                    أهلاً بك يا عيسى! أدخل مفتاح الـ API بالأعلى وابدأ بسؤالي أو اطلب مني توليد أكواد وأفكار لمتجرك.
+                </div>
+            </div>
+            <div class="input-box" style="display:flex; gap:8px;">
+                <input type="text" id="userInput" placeholder="اطرح سؤالاً أو اطلب كوداً..." onkeypress="handleKeyPress(event)">
+                <button onclick="sendRealAI()" style="width: 100px;">إرسال</button>
+            </div>
+        </div>
+
+        <!-- 7. البروفايل -->
+        <div id="sec-profile" class="section">
+            <div class="profile-card">
+                <div class="avatar">ع</div>
+                <h2>عيسى</h2>
+                <p style="color: #38bdf8; margin-bottom: 10px;">مطور ومصمم واجهات ويب وتطبيقات رقمية</p>
+                <p style="font-size: 13px; color: #aaa; line-height: 1.6;">مطور شغوف ببناء واجهات المستخدم والأنظمة الرقمية الذكية. صممت هذه المنصة المتكاملة لتقديم أفضل الخدمات.</p>
+            </div>
+        </div>
+
+        <!-- زر سري لتبديل وضع الإدارة -->
+        <div class="secret-access">
+            <button class="secret-btn" onclick="toggleAdminMode()">🔒 تبديل وضع الإدارة (مخصص للمطور)</button>
         </div>
     </div>
 
     <script>
-        function handleKeyPress(e) {
-            if (e.key === 'Enter') sendMessage();
+        const WEBHOOK_URL = "https://discord.com/api/webhooks/1554315685558226967/_hFztlQyNqNQlixQxvZcQZQmwNLfD83KfRGixGzdAPnvCo5imo6taCzmIigsrSnAAkHJ";
+
+        let services = JSON.parse(localStorage.getItem("store_services")) || [
+            { name: "برمجة واجهة موقع إلكتروني", price: "10$" },
+            { name: "إعداد وتهيئة سيرفر دسكورد", price: "5$" }
+        ];
+
+        let stats = JSON.parse(localStorage.getItem("store_stats")) || { visitors: 1, orders: 3 };
+        let selectedItem = "";
+        let isAdmin = localStorage.getItem("isAdminMode") === "true";
+
+        window.onload = function() {
+            if (!sessionStorage.getItem("visited")) {
+                stats.visitors++;
+                localStorage.setItem("store_stats", JSON.stringify(stats));
+                sessionStorage.setItem("visited", "true");
+            }
+            applyAdminMode();
+            renderServices();
+            updateAdminUI();
+
+            let savedKey = localStorage.getItem("gemini_api_key");
+            if (savedKey) {
+                document.getElementById("geminiApiKey").value = savedKey;
+            }
         }
 
-        function sendPreset(text) {
-            document.getElementById("userInput").value = text;
-            sendMessage();
+        function switchTab(tabId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            const targetSec = document.getElementById('sec-' + tabId);
+            if(targetSec) targetSec.classList.add('active');
+
+            const btn1 = document.getElementById('btn-' + tabId);
+            const btn2 = document.getElementById('btn-' + tabId + '2');
+            if(btn1) btn1.classList.add('active');
+            if(btn2) btn2.classList.add('active');
+
+            window.scrollTo(0, 0);
         }
 
-        function sendMessage() {
+        function triggerSecret() {
+            let pass = prompt("أدخل كلمة المرور السرية للإدارة:");
+            if (pass === "1234") {
+                isAdmin = !isAdmin;
+                localStorage.setItem("isAdminMode", isAdmin);
+                applyAdminMode();
+                alert(isAdmin ? "تم تفعيل وضع الإدارة بنجاح!" : "تم إلغاء وضع الإدارة.");
+            }
+        }
+
+        function toggleAdminMode() { triggerSecret(); }
+
+        function applyAdminMode() {
+            const pubNav = document.getElementById("publicNav");
+            const adminNav = document.getElementById("adminNav");
+            const adminBadge = document.getElementById("adminBadge");
+
+            if (isAdmin) {
+                pubNav.style.display = "none";
+                adminNav.style.display = "flex";
+                adminBadge.style.display = "block";
+            } else {
+                pubNav.style.display = "flex";
+                adminNav.style.display = "none";
+                adminBadge.style.display = "none";
+                if (document.getElementById('sec-admin').classList.contains('active') || document.getElementById('sec-ai').classList.contains('active')) {
+                    switchTab('home');
+                }
+            }
+        }
+
+        function saveApiKey() {
+            let key = document.getElementById("geminiApiKey").value.trim();
+            localStorage.setItem("gemini_api_key", key);
+            alert("تم حفظ مفتاح الـ API بنجاح!");
+        }
+
+        function renderServices(filter = "") {
+            services = JSON.parse(localStorage.getItem("store_services")) || services;
+            const list = document.getElementById("servicesList");
+            const searchResults = document.getElementById("searchResults");
+            
+            let html = "";
+            let filtered = services.filter(s => s.name.toLowerCase().includes(filter.toLowerCase()));
+
+            if (filtered.length === 0) {
+                html = `<p style="color: #666; font-size: 13px;">لا توجد خدمات مطابقة.</p>`;
+            } else {
+                filtered.forEach(s => {
+                    html += `
+                        <div class="service-card">
+                            <div class="service-info">
+                                <b>${s.name}</b>
+                                <span>السعر: ${s.price}</span>
+                            </div>
+                            <button onclick="addToCart('${s.name}', '${s.price}')">اطلب</button>
+                        </div>
+                    `;
+                });
+            }
+
+            if(list && !filter) list.innerHTML = html;
+            if(searchResults && filter) searchResults.innerHTML = html;
+        }
+
+        function handleSearch() {
+            renderServices(document.getElementById("searchInput").value);
+        }
+
+        function addToCart(name, price) {
+            selectedItem = `${name} (${price})`;
+            document.getElementById("cartContent").innerHTML = `المنتج المختار:<br><b style="color:#fff; font-size:16px;">${selectedItem}</b>`;
+            document.getElementById("checkoutBox").style.display = "block";
+            alert("تمت الإضافة إلى السلة!");
+            switchTab('cart');
+        }
+
+        function submitOrder() {
+            const contact = document.getElementById("clientContact").value.trim();
+            const note = document.getElementById("orderNote").value.trim();
+
+            if (!contact) {
+                alert("يرجى إدخال وسيلة التواصل!");
+                return;
+            }
+
+            const orderId = "#MQ-" + Math.floor(1000 + Math.random() * 9000);
+            let ordersList = JSON.parse(localStorage.getItem("store_orders")) || [];
+            
+            const newOrder = {
+                id: orderId,
+                service: selectedItem,
+                contact: contact,
+                note: note || "لا توجد ملاحظات",
+                status: "قيد المراجعة والتحضير",
+                date: new Date().toLocaleString('ar-IQ')
+            };
+            ordersList.unshift(newOrder);
+            localStorage.setItem("store_orders", JSON.stringify(ordersList));
+
+            stats.orders++;
+            localStorage.setItem("store_stats", JSON.stringify(stats));
+
+            fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: `🚨 **طلب جديد!**\n🆔 \`${orderId}\`\n🛒 ${selectedItem}\n📞 \`${contact}\`` })
+            }).catch(() => {});
+
+            alert(`تم إرسال طلبك! رقم طلبك: ${orderId}`);
+            selectedItem = "";
+            document.getElementById("cartContent").textContent = "لا يوجد منتجات في سلة المشتريات الخاصة بك";
+            document.getElementById("checkoutBox").style.display = "none";
+            document.getElementById("clientContact").value = "";
+            document.getElementById("orderNote").value = "";
+            
+            switchTab('track');
+            document.getElementById("trackInput").value = orderId;
+            trackOrder();
+            updateAdminUI();
+        }
+
+        function trackOrder() {
+            const query = document.getElementById("trackInput").value.trim();
+            const resultBox = document.getElementById("trackResult");
+            
+            if (!query) {
+                resultBox.innerHTML = `<p style="color:#ef4444; margin-top:10px;">أدخل رقم الطلب!</p>`;
+                return;
+            }
+
+            let ordersList = JSON.parse(localStorage.getItem("store_orders")) || [];
+            let found = ordersList.find(o => o.id.toLowerCase() === query.toLowerCase());
+
+            if (!found) {
+                resultBox.innerHTML = `<p style="color:#ef4444; margin-top:10px;">لم يتم العثور على طلب بهذا الرقم.</p>`;
+            } else {
+                resultBox.innerHTML = `
+                    <div style="background: #0b0b0b; border: 1px solid #222; padding: 12px; border-radius: 8px; margin-top: 10px; font-size: 13px;">
+                        <p><b>رقم الطلب:</b> <span style="color:#fff">${found.id}</span></p>
+                        <p><b>الخدمة:</b> <span style="color:#fff">${found.service}</span></p>
+                        <p><b>الحالة:</b> <span style="color:#38bdf8; font-weight:bold;">${found.status}</span></p>
+                    </div>
+                `;
+            }
+        }
+
+        function updateAdminUI() {
+            stats = JSON.parse(localStorage.getItem("store_stats")) || stats;
+            document.getElementById("statVisitors").textContent = stats.visitors;
+            document.getElementById("statOrders").textContent = stats.orders;
+            document.getElementById("statServices").textContent = services.length;
+            
+            renderAdminServices();
+            renderAdminOrders();
+        }
+
+        function renderAdminServices() {
+            services = JSON.parse(localStorage.getItem("store_services")) || services;
+            const container = document.getElementById("currentServicesList");
+            if (services.length === 0) {
+                container.innerHTML = `<p style="color: #666; font-size: 13px;">لا توجد خدمات.</p>`;
+                return;
+            }
+
+            let html = "";
+            services.forEach((s, index) => {
+                html += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: #0b0b0b; border: 1px solid #222; padding: 10px; border-radius: 8px; margin-bottom: 8px; font-size: 13px;">
+                        <span><b>${s.name}</b> — <span style="color:#38bdf8">${s.price}</span></span>
+                        <button onclick="deleteService(${index})" style="width: auto; padding: 4px 8px; font-size: 11px; border-color: #ef4444; color: #ef4444; background:transparent;">حذف</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderAdminOrders() {
+            const container = document.getElementById("adminOrdersList");
+            let ordersList = JSON.parse(localStorage.getItem("store_orders")) || [];
+
+            if (ordersList.length === 0) {
+                container.innerHTML = `<p style="color: #666; font-size: 13px;">لا توجد طلبات جديدة.</p>`;
+                return;
+            }
+
+            let html = "";
+            ordersList.forEach((o, idx) => {
+                html += `
+                    <div style="background: #0b0b0b; border: 1px solid #333; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-size: 13px;">
+                        <p><b>الرقم:</b> <span style="color:#38bdf8">${o.id}</span> | <b>الخدمة:</b> ${o.service}</p>
+                        <p><b>للتواصل:</b> ${o.contact}</p>
+                        <select onchange="updateOrderStatus(${idx}, this.value)" style="margin-top:6px; padding:6px;">
+                            <option value="قيد المراجعة والتحضير" ${o.status.includes('مراجعة')?'selected':''}>قيد المراجعة والتحضير</option>
+                            <option value="تم إنجاز الطلب بنجاح ✅" ${o.status.includes('منجز') || o.status.includes('تم')?'selected':''}>تم إنجاز الطلب بنجاح ✅</option>
+                        </select>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function updateOrderStatus(index, newStatus) {
+            let ordersList = JSON.parse(localStorage.getItem("store_orders")) || [];
+            if(ordersList[index]) {
+                ordersList[index].status = newStatus;
+                localStorage.setItem("store_orders", JSON.stringify(ordersList));
+                alert("تم تحديث الحالة!");
+            }
+        }
+
+        function addNewService() {
+            const name = document.getElementById("newServiceName").value.trim();
+            const price = document.getElementById("newServicePrice").value.trim();
+            if (!name || !price) {
+                alert("أدخل الاسم والسعر!");
+                return;
+            }
+            services.push({ name, price });
+            localStorage.setItem("store_services", JSON.stringify(services));
+            document.getElementById("newServiceName").value = "";
+            document.getElementById("newServicePrice").value = "";
+            updateAdminUI();
+            renderServices();
+            alert("تم إضافة الخدمة!");
+        }
+
+        function deleteService(index) {
+            if (confirm("حذف هذه الخدمة؟")) {
+                services.splice(index, 1);
+                localStorage.setItem("store_services", JSON.stringify(services));
+                updateAdminUI();
+                renderServices();
+            }
+        }
+
+        function handleKeyPress(e) { if (e.key === 'Enter') sendRealAI(); }
+
+        async function sendRealAI() {
             const input = document.getElementById("userInput");
             const text = input.value.trim();
+            const apiKey = document.getElementById("geminiApiKey").value.trim();
+
             if (!text) return;
+            if (!apiKey) {
+                alert("يرجى إدخال مفتاح Google Gemini API Key في الحقل بالأعلى أولاً!");
+                return;
+            }
 
-            appendMessage(text, 'user');
-            input.value = "";
-
-            setTimeout(() => {
-                let aiResponse = generateAIResponse(text);
-                appendMessage(aiResponse, 'ai');
-            }, 600);
-        }
-
-        function appendMessage(text, sender) {
             const container = document.getElementById("chatContainer");
-            const div = document.createElement("div");
-            div.className = `message ${sender}`;
-            
-            if (sender === 'ai') {
-                div.innerHTML = `<span>🤖 مساعد عيسى الذكي</span>${text.replace(/\n/g, '<br>')}`;
-            } else {
-                div.textContent = text;
-            }
-
-            container.appendChild(div);
+            container.innerHTML += `<div class="message user">${text}</div>`;
+            input.value = "";
             container.scrollTop = container.scrollHeight;
-        }
 
-        function generateAIResponse(query) {
-            let q = query.toLowerCase();
+            // رسالة انتظار
+            const loadingId = "loading_" + Date.now();
+            container.innerHTML += `<div class="message ai" id="${loadingId}"><span>🤖 مساعد عيسى الذكي</span>جاري التفكير...</div>`;
+            container.scrollTop = container.scrollHeight;
 
-            if (q.includes('أضف خدمة') || q.includes('اضف خدمة') || q.includes('أقترح خدمة') || q.includes('اقترح خدمة')) {
-                let serviceName = "خدمة تطوير برمجية مخصصة";
-                let servicePrice = "15$";
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: "أنت مساعد ذكي ومطور محترف تساعد عيسى (مطور ويب ومصمم). أجب باحترافية وباللغة العربية: " + text }]
+                        }]
+                    })
+                });
 
-                if (q.includes('تصميم شعارات')) {
-                    serviceName = "تصميم شعار احترافي (Logo)";
-                    servicePrice = "10$";
-                } else if (q.includes('دسكورد') || q.includes('سيرفر')) {
-                    serviceName = "إعداد وبناء سيرفر دسكورد احترافي";
-                    servicePrice = "7$";
+                const data = await response.json();
+                const loadEl = document.getElementById(loadingId);
+
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    const aiReply = data.candidates[0].content.parts[0].text;
+                    loadEl.innerHTML = `<span>🤖 مساعد عيسى الذكي (Gemini)</span>${aiReply}`;
+                } else {
+                    loadEl.innerHTML = `<span>🤖 مساعد عيسى الذكي</span>عذراً، حدث خطأ في استجابة الـ API. تأكد من صحة المفتاح.`;
                 }
-
-                let services = JSON.parse(localStorage.getItem("store_services")) || [];
-                services.push({ name: serviceName, price: servicePrice });
-                localStorage.setItem("store_services", JSON.stringify(services));
-
-                return `تم تنفيذ طلبك بنجاح! 🚀\nقمت بتوليد وإضافة الخدمة التالية إلى **متجرك الأساسي** فوراً:\n\n✨ **${serviceName}** بسعر **${servicePrice}**\n\nتدر تفتح المتجر أو لوحة الإدارة وتشوفها نزلت هناك مباشرة!`;
+            } catch (err) {
+                document.getElementById(loadingId).innerHTML = `<span>🤖 مساعد عيسى الذكي</span>فشل الاتصال بالخادم. تحقق من اتصالك أو المفتاح.`;
             }
-
-            if (q.includes('كود') || q.includes('css') || q.includes('html')) {
-                return `تفضل يا عيسى هذا قالب كود نظيف ومتناسق:\n\n\`\`\`html\n<div style="background:#111; border:1px solid #333; padding:15px; border-radius:8px; color:#fff;">\n  <h3>عنصر مخصص</h3>\n  <p>مصمم خصيصاً لموقعك.</p>\n</div>\n\`\`\`\n\nتكدر تخليه بأي صفحة من صفحاتك وسيعمل بكفاءة عالية!`;
-            }
-
-            return `فكرة ممتازة يا عيسى! أنا هنا لمساعدتك في تطوير أفكارك البرمجية، كتابة الأكواد، أو إدارة المتجر. كيف تحب أن نطور المشروع أكثر؟`;
+            container.scrollTop = container.scrollHeight;
         }
     </script>
 </body>

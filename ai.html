@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mawqena AI - مساعد الذكاء الاصطناعي</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #050505; color: #fff; text-align: right; padding-bottom: 30px; }
+        .container { max-width: 650px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; height: 100vh; max-height: 90vh; }
+        
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 15px; margin-bottom: 15px; }
+        .logo-area h1 { font-size: 20px; font-weight: bold; color: #fff; }
+        .logo-area h1 span { color: #a855f7; }
+        .logo-area p { font-size: 10px; color: #888; text-transform: uppercase; margin-top: 2px; }
+
+        .nav-links { display: flex; gap: 8px; }
+        .nav-link { padding: 6px 12px; background: #111; border: 1px solid #333; color: #ccc; border-radius: 8px; text-decoration: none; font-size: 12px; }
+        .nav-link:hover { background: #222; color: #fff; }
+
+        .chat-container { flex: 1; background: #000; border: 1px solid #222; border-radius: 12px; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; }
+        
+        .message { padding: 12px 16px; border-radius: 10px; font-size: 14px; max-width: 85%; line-height: 1.5; word-wrap: break-word; }
+        .message.ai { background: #111; border: 1px solid #333; color: #e2e8f0; align-self: flex-start; }
+        .message.user { background: #a855f7; color: #fff; align-self: flex-end; }
+        .message.ai span { color: #a855f7; font-weight: bold; display: block; margin-bottom: 4px; font-size: 12px; }
+
+        .input-box { display: flex; gap: 8px; }
+        input { flex: 1; padding: 12px; background: #0b0b0b; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 14px; outline: none; }
+        input:focus { border-color: #a855f7; }
+        
+        button { padding: 0 20px; background: #a855f7; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px; }
+        button:hover { background: #9333ea; }
+
+        .suggestions { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 10px; }
+        .suggestion-chip { background: #111; border: 1px solid #333; color: #aaa; padding: 6px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; white-space: nowrap; }
+        .suggestion-chip:hover { border-color: #a855f7; color: #fff; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo-area">
+                <h1>Mawqena <span>AI Studio</span></h1>
+                <p>Smart Assistant & Code Generator</p>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link" target="_blank">🌐 المتجر</a>
+                <a href="admin.html" class="nav-link" target="_blank">⚙️ الإدارة</a>
+            </div>
+        </header>
+
+        <div class="chat-container" id="chatContainer">
+            <div class="message ai">
+                <span>🤖 مساعد عيسى الذكي</span>
+                أهلاً بك يا عيسى! أنا مساعدك الذكي المربوط بمتجرك. أستطيع مساعدتك في توليد أفكار للخدمات، كتابة أكواد برمجية، أو إضافة خدمات جديدة فوراً للمتجر بناءً على طلبك. كيف أساعدك اليوم؟
+            </div>
+        </div>
+
+        <div class="suggestions">
+            <div class="suggestion-chip" onclick="sendPreset('اقترح خدمة برمجية جديدة للمتجر')">💡 اقترح خدمة برمجية</div>
+            <div class="suggestion-chip" onclick="sendPreset('أعطني كود زر منسق بـ CSS')">💻 كود CSS جاهز</div>
+            <div class="suggestion-chip" onclick="sendPreset('أضف خدمة تصميم شعارات بسعر 10$ للمتجر')">⚡ إضافة خدمة شعارات</div>
+            <div class="suggestion-chip" onclick="sendPreset('أضف خدمة تهيئة سيرفر دسكورد بسعر 7$ للمتجر')">🚀 إضافة خدمة دسكورد</div>
+        </div>
+
+        <div class="input-box">
+            <input type="text" id="userInput" placeholder="اطلب شيئاً من الذكاء الاصطناعي..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()">إرسال</button>
+        </div>
+    </div>
+
+    <script>
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function sendPreset(text) {
+            document.getElementById("userInput").value = text;
+            sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById("userInput");
+            const text = input.value.trim();
+            if (!text) return;
+
+            appendMessage(text, 'user');
+            input.value = "";
+
+            setTimeout(() => {
+                let aiResponse = generateAIResponse(text);
+                appendMessage(aiResponse, 'ai');
+            }, 600);
+        }
+
+        function appendMessage(text, sender) {
+            const container = document.getElementById("chatContainer");
+            const div = document.createElement("div");
+            div.className = `message ${sender}`;
+            
+            if (sender === 'ai') {
+                div.innerHTML = `<span>🤖 مساعد عيسى الذكي</span>${text.replace(/\n/g, '<br>')}`;
+            } else {
+                div.textContent = text;
+            }
+
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function generateAIResponse(query) {
+            let q = query.toLowerCase();
+
+            if (q.includes('أضف خدمة') || q.includes('اضف خدمة') || q.includes('أقترح خدمة') || q.includes('اقترح خدمة')) {
+                let serviceName = "خدمة تطوير برمجية مخصصة";
+                let servicePrice = "15$";
+
+                if (q.includes('تصميم شعارات')) {
+                    serviceName = "تصميم شعار احترافي (Logo)";
+                    servicePrice = "10$";
+                } else if (q.includes('دسكورد') || q.includes('سيرفر')) {
+                    serviceName = "إعداد وبناء سيرفر دسكورد احترافي";
+                    servicePrice = "7$";
+                }
+
+                let services = JSON.parse(localStorage.getItem("store_services")) || [];
+                services.push({ name: serviceName, price: servicePrice });
+                localStorage.setItem("store_services", JSON.stringify(services));
+
+                return `تم تنفيذ طلبك بنجاح! 🚀\nقمت بتوليد وإضافة الخدمة التالية إلى **متجرك الأساسي** فوراً:\n\n✨ **${serviceName}** بسعر **${servicePrice}**\n\nتدر تفتح المتجر أو لوحة الإدارة وتشوفها نزلت هناك مباشرة!`;
+            }
+
+            if (q.includes('كود') || q.includes('css') || q.includes('html')) {
+                return `تفضل يا عيسى هذا قالب كود نظيف ومتناسق:\n\n\`\`\`html\n<div style="background:#111; border:1px solid #333; padding:15px; border-radius:8px; color:#fff;">\n  <h3>عنصر مخصص</h3>\n  <p>مصمم خصيصاً لموقعك.</p>\n</div>\n\`\`\`\n\nتكدر تخليه بأي صفحة من صفحاتك وسيعمل بكفاءة عالية!`;
+            }
+
+            return `فكرة ممتازة يا عيسى! أنا هنا لمساعدتك في تطوير أفكارك البرمجية، كتابة الأكواد، أو إدارة المتجر. كيف تحب أن نطور المشروع أكثر؟`;
+        }
+    </script>
+</body>
+</html>
